@@ -122,7 +122,7 @@ if __name__ == "__main__":
     N, C, H, W = 2, 3, 33, 33
     x = torch.randn(N, C, H, W)
     out_channels=8
-    kernel_size=7
+    kernel_size=4
 
     with profile(activities=[ProfilerActivity.CPU, ProfilerActivity.CUDA]) as prof:
         with record_function("pytorch"):

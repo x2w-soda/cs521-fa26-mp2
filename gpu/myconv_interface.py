@@ -1,5 +1,7 @@
 import torch
+import time
 from torch.utils.cpp_extension import load
+
 
 # Compile and load CUDA extension
 conv_module = load(name="myconv",
@@ -8,7 +10,7 @@ conv_module = load(name="myconv",
 
 # Input parameters
 N, C_in, H, W = 2, 3, 33, 33
-C_out, KH, KW = 4, 6, 6
+C_out, KH, KW = 8, 4, 4
 stride, pad = 1, 1
 
 # Allocate tensors
@@ -23,8 +25,11 @@ print('torch.nn.functional.conv2d: complete')
 
 # Run o4 kernel
 print('conv_cuda: begin')
+start_time = time.perf_counter()
 out_custom = conv_module.conv_cuda(x, w, stride, pad)
-print('conv_cuda: complete')
+end_time = time.perf_counter()
+execution_time = end_time - start_time
+print(f'conv_cuda: complete {execution_time:.6f}')
 
 # Test shape and correctness
 print("CUDA --- shape check:", out_custom.shape == out_ref.shape)
