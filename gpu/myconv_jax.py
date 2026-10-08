@@ -106,7 +106,7 @@ if __name__ == "__main__":
     model.eval()
 
     # Example input
-    x_torch = torch.randn(1, 3, H, W)
+    x_torch = torch.randn(2, 3, H, W)
 
     # Export weights and biases
     params = {
@@ -119,11 +119,11 @@ if __name__ == "__main__":
     weight_jax = jnp.array(params["weight"])
     bias_jax = jnp.array(params["bias"])
 
-    # enable JIT compilation
-    conv2d_manual_jax_jit = jit(conv2d_manual_jax)
-
     jax.profiler.start_trace(f"/tmp/tensorboard", create_perfetto_trace=True)
     with jax.profiler.TraceAnnotation("myconv_jax"):
+        # enable JIT compilation
+        conv2d_manual_jax_jit = jit(conv2d_manual_jax)
+
         # call your JAX function
         out_jax = conv2d_manual_jax_jit(x_jax, weight_jax, bias_jax)
     jax.profiler.stop_trace()

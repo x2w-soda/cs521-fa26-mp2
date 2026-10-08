@@ -119,13 +119,17 @@ class ConvModel(nn.Module):
 
 if __name__ == "__main__":
     torch.manual_seed(0)
-    N, C, H, W = 2, 4, 22, 22
+    N, C, H, W = 2, 3, 33, 33
     x = torch.randn(N, C, H, W)
     out_channels=8
     kernel_size=7
-    model = ConvModel(H, W, C, out_channels, kernel_size, stride=1, padding=1)
-    out = model(x)
 
+    with profile(activities=[ProfilerActivity.CPU, ProfilerActivity.CUDA]) as prof:
+        with record_function("pytorch"):
+            model = ConvModel(H, W, C, out_channels, kernel_size, stride=1, padding=1)
+            out = model(x)
+    prof.export_chrome_trace("/tmp/trace_pytorch.json")
+        
     # Test your solution
     conv_ref = F.conv2d(x, model.weight, model.bias, stride=1, padding=1)
     print("PyTorch --- shape check:", out.shape == conv_ref.shape)

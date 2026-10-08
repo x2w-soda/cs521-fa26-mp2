@@ -7,7 +7,7 @@ conv_module = load(name="myconv",
                      verbose=True)
 
 # Input parameters
-N, C_in, H, W = 4, 3, 25, 25
+N, C_in, H, W = 2, 3, 33, 33
 C_out, KH, KW = 4, 6, 6
 stride, pad = 1, 1
 
@@ -15,11 +15,16 @@ stride, pad = 1, 1
 x = torch.randn(N, C_in, H, W, device="cuda", dtype=torch.float32)
 w = torch.randn(C_out, C_in, KH, KW, device="cuda", dtype=torch.float32)
 
-# Run o4 kernel
-out_custom = conv_module.conv_cuda(x, w, stride, pad)
-
 # Reference solution (PyTorch)
+print('torch.nn.functional.conv2d: begin')
+# print(x, w)
 out_ref = torch.nn.functional.conv2d(x, w, stride=stride, padding=pad)
+print('torch.nn.functional.conv2d: complete')
+
+# Run o4 kernel
+print('conv_cuda: begin')
+out_custom = conv_module.conv_cuda(x, w, stride, pad)
+print('conv_cuda: complete')
 
 # Test shape and correctness
 print("CUDA --- shape check:", out_custom.shape == out_ref.shape)
