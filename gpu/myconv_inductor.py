@@ -8,10 +8,10 @@ if __name__ == "__main__":
     torch.manual_seed(0)
 
     # Instantiate your PyTorch model
-    N, C, H, W = 2, 3, 33, 33
+    N, C, H, W = 2, 3, 50, 50
     x = torch.randn(N, C, H, W).cuda()
     
-    model = ConvModel(H, W, in_channels=C, out_channels=8, kernel_size=4, stride=1, padding=1).cuda().eval()
+    model = ConvModel(H, W, in_channels=C, out_channels=8, kernel_size=7, stride=1, padding=1).cuda().eval()
 
     with profile(activities=[ProfilerActivity.CPU, ProfilerActivity.CUDA]) as prof:
         with record_function("pytorch"):

@@ -119,10 +119,10 @@ class ConvModel(nn.Module):
 
 if __name__ == "__main__":
     torch.manual_seed(0)
-    N, C, H, W = 2, 3, 33, 33
+    N, C, H, W = 2, 3, 50, 50
     x = torch.randn(N, C, H, W)
     out_channels=8
-    kernel_size=4
+    kernel_size=7
 
     with profile(activities=[ProfilerActivity.CPU, ProfilerActivity.CUDA]) as prof:
         with record_function("pytorch"):
